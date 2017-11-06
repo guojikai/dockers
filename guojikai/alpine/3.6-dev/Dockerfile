@@ -27,7 +27,8 @@ RUN echo -e "http://mirrors.ustc.edu.cn/alpine/v3.6/main/\nhttp://mirrors.ustc.e
         # sets: timezone
     # set timezone
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone \
-    && apk del tzdata && rm -rf /var/cache/apk/*
+    && apk del tzdata && rm -rf /var/cache/apk/* \
+    && touch /root/.profile && touch /root/.bashrc  && touch /root/.bash_profile
 
 CMD ["/bin/bash", "-l"]
 
