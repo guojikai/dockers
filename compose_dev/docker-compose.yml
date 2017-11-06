@@ -1,0 +1,40 @@
+version: "3"
+services:
+    redis:
+        image: "guojikai/redis:3.2"
+        ports:
+            - "6379:6379"
+        volumes:
+            - ~/etc/redis:/etc/redis
+            - ~/data:/data
+
+    mysql:
+        image: "guojikai/mysql:5.7"
+        ports:
+            - "3306:3306"
+        volumes:
+            - ~/etc/mysql:/etc/mysql
+            - ~/data/mysql:/var/lib/mysql
+
+    php:
+        image: "guojikai/php:7.0-full"
+        ports:
+            - "9000:9000"
+        volumes:
+            - ~/etc/php/conf.d:/usr/local/etc/php/conf.d
+            - ~/workspace:/home
+        links:
+          - redis:redis
+          - mysql:mysql
+
+    nginx:
+        image: "guojikai/nginx:1.12"
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ~/etc/nginx:/etc/nginx
+            - ~/workspace:/home
+        links:
+          - php:php
+
