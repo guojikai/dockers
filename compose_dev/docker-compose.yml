@@ -17,7 +17,7 @@ services:
             - ~/data/mysql:/var/lib/mysql
 
     php:
-        image: "guojikai/php:7.0-full"
+        image: "qiufuqi/php:7.2-full"
         ports:
             - "9000:9000"
         volumes:
@@ -26,6 +26,19 @@ services:
         links:
           - redis:redis
           - mysql:mysql
+        tty: true
+
+    node:
+        image: "guojikai/node:8.1"
+        ports:
+            - "3010:3010"
+        volumes:
+            - ~/workspace:/home
+        links:
+          - redis:redis
+          - mysql:mysql
+        stdin_open: true
+        tty: true
 
     nginx:
         image: "guojikai/nginx:1.12"
@@ -37,4 +50,6 @@ services:
             - ~/workspace:/home
         links:
           - php:php
+          - node:node
+        tty: true
 
