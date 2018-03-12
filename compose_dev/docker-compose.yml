@@ -9,7 +9,7 @@ services:
             - ~/data:/data
 
     mysql:
-        image: "guojikai/mysql:5.7"
+        image: "mysql:5.6"
         ports:
             - "3306:3306"
         volumes:
@@ -31,7 +31,7 @@ services:
     node:
         image: "guojikai/node:8.1"
         ports:
-            - "3010:3010"
+            - "3000-3010:3000-3010"
         volumes:
             - ~/workspace:/home
         links:
