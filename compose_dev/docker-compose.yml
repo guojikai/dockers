@@ -17,7 +17,7 @@ services:
             - ~/data/mysql:/var/lib/mysql
 
     php:
-        image: "guojikai/php:7.0-full"
+        image: "guojikai/php:7.1-full"
         ports:
             - "9000:9000"
         volumes:
