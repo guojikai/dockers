@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-stretch
+FROM php:5.6-fpm-jessie
 
 ENV BUILD_DEPS \
     zlib1g-dev \
@@ -6,7 +6,7 @@ ENV BUILD_DEPS \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
-    libpng-dev \
+    libpng12-dev \
     libmemcached-dev \
     librdkafka-dev
 
@@ -30,22 +30,23 @@ RUN echo "Build start..." \
     && apt-get install -y $DEV_SOFTS \
     && echo "Intall PHP extensions..." \
     && docker-php-ext-install -j$(nproc) zip \
+    && docker-php-ext-install -j$(nproc) mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install -j$(nproc) pdo_mysql \
     && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-install -j$(nproc) opcache \
-    && echo "Intall PHP extensions via PECL and local Packages..." \
-    && pecl install /usr/src/pecl_exts/mcrypt-1.0.1.tgz \
-    && pecl install /usr/src/pecl_exts/mongodb-1.3.4.tgz \
+    && echo "Intall PHP extensions via PECL local Packages" \
+    && pecl install /usr/src/pecl_exts/mongodb-1.2.8.tgz \
     && pecl install /usr/src/pecl_exts/redis-3.1.2.tgz \
-    && pecl install /usr/src/pecl_exts/memcached-3.0.3.tgz \
+    && pecl install /usr/src/pecl_exts/memcached-2.2.0.tgz \
     && pecl install /usr/src/pecl_exts/rdkafka-3.0.1.tgz \
     && pecl install /usr/src/pecl_exts/swoole-1.9.12.tgz \
-    && docker-php-ext-enable mcrypt mongodb redis memcached rdkafka swoole \
+    && docker-php-ext-enable mongodb redis memcached rdkafka swoole \
     && rm -rf /usr/src/pecl_exts \
     && echo "Intall PHP Composer..." \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \
     && php -r "unlink('composer-setup.php');" \
     && mv composer.phar /usr/local/bin/composer
+
