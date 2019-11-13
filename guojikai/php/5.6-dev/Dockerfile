@@ -24,11 +24,11 @@ RUN echo "Build start..." \
     && mv /etc/apt/sources.list /usr/src/sources.list.backup \
     && cp /usr/src/sources.list.mirror /etc/apt/sources.list \
     && apt-get update \
-    && echo "Intall dependencies..." \
+    && echo "Install dependencies..." \
     && apt-get install -y $BUILD_DEPS \
-    && echo "Intall dev softs..." \
+    && echo "Install dev softs..." \
     && apt-get install -y $DEV_SOFTS \
-    && echo "Intall PHP extensions..." \
+    && echo "Install PHP extensions..." \
     && docker-php-ext-install -j$(nproc) zip \
     && docker-php-ext-install -j$(nproc) mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -36,7 +36,7 @@ RUN echo "Build start..." \
     && docker-php-ext-install -j$(nproc) pdo_mysql \
     && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-install -j$(nproc) opcache \
-    && echo "Intall PHP extensions via PECL local Packages" \
+    && echo "Install PHP extensions via PECL local Packages" \
     && pecl install /usr/src/pecl_exts/mongodb-1.2.8.tgz \
     && pecl install /usr/src/pecl_exts/redis-3.1.2.tgz \
     && pecl install /usr/src/pecl_exts/memcached-2.2.0.tgz \
@@ -44,7 +44,7 @@ RUN echo "Build start..." \
     && pecl install /usr/src/pecl_exts/swoole-1.9.12.tgz \
     && docker-php-ext-enable mongodb redis memcached rdkafka swoole \
     && rm -rf /usr/src/pecl_exts \
-    && echo "Intall PHP Composer..." \
+    && echo "Install PHP Composer..." \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \
     && php -r "unlink('composer-setup.php');" \
