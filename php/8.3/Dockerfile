@@ -1,18 +1,20 @@
-FROM php:8.3-fpm-alpine3.20
+FROM php:8.3-fpm-bookworm
 
 # deps
-ENV BUILD_DEPS="autoconf gcc g++ make zlib-dev openssl-dev libpng-dev freetype-dev jpeg-dev libzip-dev libpq-dev"
+ENV BUILD_DEPS="libbz2-dev libfreetype6-dev libjpeg-dev libpng-dev libwebp-dev libxpm-dev libzip-dev"
 
 # update packages list & install dependences
-RUN apk update && apk add ${BUILD_DEPS} 
+RUN apt-get update && apt-get install -y --no-install-recommends ${BUILD_DEPS} 
 
 # install exts
 RUN echo "Install PHP extensions via docker-php-ext-install..." \
-    && docker-php-ext-install -j$(nproc) zip \
-    && docker-php-ext-configure gd \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
+    && docker-php-ext-install -j$(nproc) bz2 \
     && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install -j$(nproc) pdo_mysql \
-    && docker-php-ext-install -j$(nproc) opcache 
+    && docker-php-ext-install -j$(nproc) mysqli \
+    && docker-php-ext-install -j$(nproc) opcache \
+    && docker-php-ext-install -j$(nproc) zip \
+    && docker-php-ext-install -j$(nproc) bcmath 
 
 RUN echo "Install PHP extensions via PECL..." \
     && pecl update-channels \
@@ -28,4 +30,5 @@ RUN echo "Install Composer..." \
     && composer self-update
 
 # clean
-RUN apk del ${BUILD_DEPS} && apk del ${BUILD_DEPS}
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/*
